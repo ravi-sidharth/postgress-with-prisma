@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  database: 
+    image: postgres:15 
+    container_name: postgres_db
+    restart: always 
+    environment:
+      - POSTGRES_USER: postgres
+      - POSTGRES_PASSWORD: Sidharth%40123
+      - postgres_db: postgres-with-prisma 
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+app:
+  build: .
+  container_name: express_api 
+  depends_on:
+    - database 
+  environment: 
+    - DATABASE_URL: postgresql://postgres:Sidharth%40123@localhost:5432/postgres-with-prisma?schema=public
+  ports:
+    - "3000:3000"
+  volumes:
+    - .:/user/src/app 
+    - /user/src/node_modules
+  commands: ["sh","c","npx prisma generate && node src/server.js"]
+
+volumes: 
+  postgres_data
+
+
+
+   
+  
